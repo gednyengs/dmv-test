@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CA DMV Practice Test -- Financial Responsibility, Insurance Requirements, and Collisions</title>
+<style>
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: #f5f7fa;
+  color: #1a1a2e;
+  line-height: 1.6;
+}
+
+#app {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* Header */
+header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+header h1 {
+  font-size: 1.5rem;
+  margin: 0 0 12px 0;
+  color: #003366;
+}
+
+#progress-bar-container {
+  width: 100%;
+  height: 8px;
+  background: #dde1e7;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+#progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #2e7d32, #43a047);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+#score-display {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.score-chip {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.correct-chip {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.incorrect-chip {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.unanswered-chip {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+/* Filter bar */
+#filter-bar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 12px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.filter-group label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #555;
+  white-space: nowrap;
+}
+
+.filter-group select {
+  font-size: 0.85rem;
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  max-width: 180px;
+}
+
+#btn-shuffle, #btn-reset {
+  font-size: 0.85rem;
+  padding: 5px 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  color: #333;
+  transition: background 0.2s;
+}
+
+#btn-shuffle:hover, #btn-reset:hover {
+  background: #eee;
+}
+
+/* Question container */
+#question-container {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+#question-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+#q-counter {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #003366;
+}
+
+.meta-tag {
+  font-size: 0.75rem;
+  padding: 2px 10px;
+  border-radius: 12px;
+  background: #e8eaf6;
+  color: #283593;
+  font-weight: 600;
+}
+
+/* Image */
+#q-image-wrapper {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+#q-image {
+  max-width: 100%;
+  max-height: 360px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  object-fit: contain;
+}
+
+/* Question text */
+#q-text {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+/* Choices */
+#choices-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.choice-btn {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #dde1e7;
+  border-radius: 8px;
+  background: #fafbfc;
+  cursor: pointer;
+  text-align: left;
+  font-size: 1rem;
+  line-height: 1.4;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.choice-btn:hover:not(:disabled) {
+  border-color: #90caf9;
+  background: #e3f2fd;
+}
+
+.choice-btn:disabled {
+  cursor: default;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.choice-btn:disabled.choice-correct,
+.choice-btn:disabled.choice-incorrect {
+  opacity: 1;
+}
+
+.choice-letter {
+  font-weight: 700;
+  color: #555;
+  min-width: 24px;
+  flex-shrink: 0;
+}
+
+.choice-text {
+  flex: 1;
+}
+
+.choice-selected {
+  border-color: #1976d2;
+  background: #e3f2fd;
+}
+
+.choice-correct {
+  border-color: #2e7d32 !important;
+  background: #e8f5e9 !important;
+}
+
+.choice-correct .choice-letter {
+  color: #2e7d32;
+}
+
+.choice-incorrect {
+  border-color: #c62828 !important;
+  background: #ffebee !important;
+}
+
+.choice-incorrect .choice-letter {
+  color: #c62828;
+}
+
+/* Feedback */
+#feedback {
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.feedback-correct {
+  color: #2e7d32;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.feedback-incorrect {
+  color: #c62828;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.feedback-neutral {
+  color: #555;
+  font-weight: 600;
+}
+
+#explanation {
+  margin-top: 10px;
+  padding: 12px 16px;
+  background: #fff8e1;
+  border-left: 4px solid #ffa000;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Buttons */
+#action-buttons {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.btn-primary {
+  padding: 10px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: #1976d2;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin: 4px;
+}
+
+.btn-primary:hover {
+  background: #1565c0;
+}
+
+#nav-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn-nav {
+  padding: 10px 24px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #333;
+  background: #e0e0e0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-nav:hover:not(:disabled) {
+  background: #bdbdbd;
+}
+
+.btn-nav:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* Summary */
+#summary-container {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 32px 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  text-align: center;
+}
+
+#summary-container h2 {
+  color: #003366;
+  margin-top: 0;
+}
+
+.summary-big-score {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #1a1a2e;
+  margin: 16px 0 4px;
+}
+
+.summary-pct {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.summary-pass { color: #2e7d32; }
+.summary-fail { color: #c62828; }
+
+.summary-detail {
+  margin-bottom: 24px;
+}
+
+.breakdown-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0 24px;
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+.breakdown-table th {
+  background: #e8eaf6;
+  padding: 8px 12px;
+  font-weight: 700;
+  color: #283593;
+}
+
+.breakdown-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #eee;
+}
+
+/* Empty state */
+#empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: #777;
+  font-size: 1.1rem;
+}
+
+/* Back link */
+.back-link {
+  display: inline-block;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+/* Extra questions link */
+.extra-link {
+  display: block;
+  text-align: center;
+  margin-top: 24px;
+  padding: 14px 24px;
+  background: #ffffff;
+  border: 2px solid #1976d2;
+  border-radius: 12px;
+  color: #1976d2;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+.extra-link:hover {
+  background: #1976d2;
+  color: #ffffff;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  #app { padding: 8px; }
+  header h1 { font-size: 1.2rem; }
+  #question-container { padding: 16px; }
+  #q-text { font-size: 1rem; }
+  .choice-btn { padding: 10px 12px; font-size: 0.95rem; }
+  #filter-bar { gap: 6px; padding: 8px; }
+  .filter-group select { max-width: 120px; }
+  .summary-big-score { font-size: 2rem; }
+}
+
+</style>
+</head>
+<body>
+
+<div id="app">
+  <!-- Header -->
+  <header id="header">
+    <a href="index.html" class="back-link">&larr; All Sections</a>
+    <h1>CA DMV Practice Test -- Financial Responsibility, Insurance Requirements, and Collisions</h1>
+    <div id="progress-bar-container">
+      <div id="progress-bar"></div>
+    </div>
+    <div id="score-display">
+      <span id="score-correct" class="score-chip correct-chip">Correct: 0</span>
+      <span id="score-incorrect" class="score-chip incorrect-chip">Incorrect: 0</span>
+      <span id="score-unanswered" class="score-chip unanswered-chip">Remaining: 0</span>
+    </div>
+  </header>
+
+  <!-- Filter controls -->
+  <div id="filter-bar">
+    <div class="filter-group" style="display:none;">
+      <label for="filter-section">Section:</label>
+      <select id="filter-section"><option value="all">All Sections</option></select>
+    </div>
+    <div class="filter-group">
+      <label for="filter-topic">Topic:</label>
+      <select id="filter-topic"><option value="all">All Topics</option></select>
+    </div>
+    <div class="filter-group">
+      <label for="filter-difficulty">Difficulty:</label>
+      <select id="filter-difficulty"><option value="all">All</option></select>
+    </div>
+    <div class="filter-group">
+      <label for="filter-type">Type:</label>
+      <select id="filter-type"><option value="all">All</option></select>
+    </div>
+    <button id="btn-shuffle" title="Shuffle questions">Shuffle</button>
+    <button id="btn-reset" title="Reset all answers">Reset</button>
+  </div>
+
+  <!-- Question slide -->
+  <div id="question-container" style="display:none;">
+    <div id="question-meta">
+      <span id="q-counter">Question 1 of 1</span>
+      <span id="q-section-label" class="meta-tag"></span>
+      <span id="q-topic-label" class="meta-tag"></span>
+      <span id="q-difficulty-label" class="meta-tag"></span>
+    </div>
+
+    <div id="q-image-wrapper" style="display:none;">
+      <img id="q-image" alt="Question image" />
+    </div>
+
+    <div id="q-text"></div>
+
+    <div id="choices-container"></div>
+
+    <div id="feedback" style="display:none;">
+      <div id="feedback-text"></div>
+      <div id="explanation" style="display:none;"></div>
+    </div>
+
+    <div id="action-buttons">
+      <button id="btn-show-answer" class="btn-primary">Check Answer</button>
+    </div>
+
+    <div id="nav-buttons">
+      <button id="btn-prev" class="btn-nav" disabled>&larr; Previous</button>
+      <button id="btn-next" class="btn-nav">Next &rarr;</button>
+    </div>
+  </div>
+
+  <!-- Summary page -->
+  <div id="summary-container" style="display:none;">
+    <h2>Test Complete</h2>
+    <div id="summary-score"></div>
+    <div id="summary-breakdown"></div>
+    <button id="btn-review" class="btn-primary">Review Answers</button>
+    <button id="btn-restart" class="btn-primary">Restart</button>
+  </div>
+
+  <!-- Empty state -->
+  <div id="empty-state" style="display:none;">
+    <p>No questions match the current filters. Try adjusting your selection.</p>
+  </div>
+
+  <!-- Extra questions link -->
+  <a href="section-10-extra.html" class="extra-link">Additional Practice Questions &rarr;</a>
+</div>
+
+<script>
+'use strict';
+(function() {
+
+/* ---- Data ---- */
+var ALL_QUESTIONS = JSON.parse('[{"question_id": "q-sec10-collisions-009", "question_type": "multiple_choice", "question_text": "What is the first thing you must do if you are involved in a collision?", "choices": [{"label": "A", "text": "Stop"}, {"label": "B", "text": "Call your insurance company"}, {"label": "C", "text": "Move your vehicle out of traffic"}, {"label": "D", "text": "Exchange information with the other driver"}], "correct_answer": "A", "explanation": "If you are in a collision, you must stop. Someone could be injured and need your help. Failing to stop or leaving the scene is a hit-and-run, which carries severe penalties.", "section_id": "section-10", "topic": "Collisions", "subtopic": "What to Do if You Are in a Collision", "difficulty": "easy", "image_id": null, "image_file": null, "source_facts": ["If you are in a collision, you must stop."], "validation_status": "pass", "validation_notes": null, "ranking": {"frequency": 10, "quality": 9, "importance": 10, "uniqueness": 9, "composite": 9.6, "rank": 1}, "_image_data_uri": null}, {"question_id": "q-sec10-insurance-requirements-007", "question_type": "multiple_choice", "question_text": "What are the minimum liability insurance coverage limits in California (single injury/multiple injury/property damage)?", "choices": [{"label": "A", "text": "$15,000 / $30,000 / $5,000"}, {"label": "B", "text": "$30,000 / $60,000 / $15,000"}, {"label": "C", "text": "$25,000 / $50,000 / $10,000"}, {"label": "D", "text": "$50,000 / $100,000 / $25,000"}], "correct_answer": "B", "explanation": "California requires minimum liability insurance of $30,000 for a single death or injury, $60,000 for death or injury to more than one person, and $15,000 for property damage. This is often expressed as 30/60/15.", "section_id": "section-10", "topic": "Insurance Requirements", "subtopic": "Minimum Coverage Amounts", "difficulty": "hard", "image_id": null, "image_file": null, "source_facts": ["Your insurance must cover at least $30,000 for a single death or injury.", "Your insurance must cover at least $60,000 for death or injury to more than one person.", "Your insurance must cover at least $15,000 for property damage."], "validation_status": "pass", "validation_notes": null, "ranking": {"frequency": 9, "quality": 9, "importance": 8, "uniqueness": 9, "composite": 8.8, "rank": 2}, "_image_data_uri": null}, {"question_id": "q-sec10-collisions-011", "question_type": "multiple_choice", "question_text": "When should you call 911 after a collision?", "choices": [{"label": "A", "text": "Only if the collision caused more than $1,000 in damage"}, {"label": "B", "text": "Only after exchanging information with the other driver"}, {"label": "C", "text": "Right away if anyone is hurt"}, {"label": "D", "text": "Only if the collision occurs on a public road"}], "correct_answer": "C", "explanation": "Call 911 right away if anyone is hurt. If no one is hurt, move your vehicle out of traffic and then call 911.", "section_id": "section-10", "topic": "Collisions", "subtopic": "What to Do if You Are in a Collision", "difficulty": "easy", "image_id": null, "image_file": null, "source_facts": ["Call 911 right away if anyone is hurt."], "validation_status": "pass", "validation_notes": null, "ranking": {"frequency": 9, "quality": 8, "importance": 10, "uniqueness": 7, "composite": 8.6, "rank": 3}, "_image_data_uri": null}, {"question_id": "q-sec10-collisions-001", "question_type": "multiple_choice", "question_text": "What should you do if you see a vehicle\'s emergency flashers ahead?", "choices": [{"label": "A", "text": "Slow down and pass carefully"}, {"label": "B", "text": "Change lanes immediately without checking mirrors"}, {"label": "C", "text": "Speed up to pass the vehicle quickly"}, {"label": "D", "text": "Stop your vehicle and wait for the flashers to turn off"}], "correct_answer": "A", "explanation": "If you see a vehicle\'s emergency flashers ahead, slow down. There may be a collision or other road emergency. Pass carefully.", "section_id": "section-10", "topic": "Collisions", "subtopic": "Collision Awareness and Avoidance", "difficulty": "easy", "image_id": null, "image_file": null, "source_facts": ["If you see a vehicle\'s emergency flashers ahead, slow down.", "If you see a vehicle\'s emergency flashers ahead, there may be a collision or other road emergency.", "If you see a vehicle\'s emergency flashers ahead, pass carefully."], "validation_status": "pass", "validation_notes": null, "ranking": {"frequency": 8, "quality": 8, "importance": 9, "uniqueness": 9, "composite": 8.5, "rank": 4}, "_image_data_uri": null}, {"question_id": "q-sec10-collisions-004", "question_type": "multiple_choice", "question_text": "Which of the following is NOT listed as a common cause of collisions?", "choices": [{"label": "A", "text": "Driver distractions"}, {"label": "B", "text": "Unsafe speed"}, {"label": "C", "text": "Improper turns"}, {"label": "D", "text": "Driving a vehicle that is older than 10 years"}], "correct_answer": "D", "explanation": "The most common causes of collisions listed in the handbook are: driver distractions, unsafe speed, improper turns, not following right-of-way rules, not following stop signals and signs, driving on the wrong side of the road, and traveling faster or slower than the flow of traffic. Vehicle age is not listed.", "section_id": "section-10", "topic": "Collisions", "subtopic": "Causes of Collisions", "difficulty": "medium", "image_id": null, "image_file": null, "source_facts": ["Driver distractions are a common cause of collisions.", "Unsafe speed is a common cause of collisions.", "Improper turns are a common cause of collisions."], "validation_status": "pass", "validation_notes": null, "ranking": {"frequency": 8, "quality": 9, "importance": 8, "uniqueness": 9, "composite": 8.5, "rank": 5}, "_image_data_uri": null}, {"question_id": "q-sec10-collisions-020", "question_type": "multiple_choice", "question_text": "Within how many days must you report a collision to the DMV if it caused more than $1,000 in property damage or anyone was injured or killed?", "choices": [{"label": "A", "text": "5 days"}, {"label": "B", "text": "10 days"}, {"label": "C", "text": "15 days"}, {"label": "D", "text": "30 days"}], "correct_answer": "B", "explanation": "If you are in a collision, you must report it to DMV within 10 days if the collision caused more than $1,000 in damage to property or anyone was injured or killed.", "section_id": "section-10", "topic": "Collisions", "subtopic": "Reporting a Collision", "difficulty": "medium", "image_id": null, "image_file": null, "source_facts": ["If you are in a collision, you must report it to DMV within 10 days if the collision caused more than $1,000 in damage to property.", "If you are in a collision, you must report it to DMV within 10 days if anyone was injured or killed."], "validation_status": "pass", "validation_notes": null, "ranking": {"frequency": 9, "quality": 9, "importance": 8, "uniqueness": 8, "composite": 8.5, "rank": 6}, "_image_data_uri": null}, {"question_id": "q-sec10-driving-without-insurance-001", "question_type": "multiple_choice", "question_text": "How long can your driving privilege be suspended if you are in a collision without proper insurance coverage?", "choices": [{"label": "A", "text": "Up to one year"}, {"label": "B", "text": "Up to two years"}, {"label": "C", "text": "Up to three years"}, {"label": "D", "text": "Up to four years"}], "correct_answer": "D", "explanation": "Your driving privilege will be suspended for up to four years if you are in a collision and do not have proper insurance coverage. It does not matter who was at fault.", "section_id": "section-10", "topic": "Driving Without Insurance", "subtopic": "Suspension and California Insurance Proof Certificate", "difficulty": "medium", "image_id": null, "image_file": null, "source_facts": ["Your driving privilege will be suspended for up to four years if you are in a collision and do not have proper insurance coverage."], "validation_status": "pass", "validation_notes": null, "ranking": {"frequency": 8, "quality": 8, "importance": 9, "uniqueness": 9, "composite": 8.5, "rank": 7}, "_image_data_uri": null}, {"question_id": "q-sec10-collisions-016", "question_type": "multiple_choice", "question_text": "If your vehicle hits a parked car and you cannot find the owner, what should you do?", "choices": [{"label": "A", "text": "Drive away since there are no witnesses"}, {"label": "B", "text": "Call your insurance company and leave the scene"}, {"label": "C", "text": "Leave a note with your name, phone number, and address securely attached to the vehicle, and report the collision to law enforcement"}, {"label": "D", "text": "Wait at the scene for up to one hour for the owner to return"}], "correct_answer": "C", "explanation": "If you cannot find the owner of a parked car you hit, leave a note with your name, phone number, and address. Securely attach the note to the vehicle or property. Report the collision to law enforcement.", "section_id": "section-10", "topic": "Collisions", "subtopic": "What to Do if You Are in a Collision", "difficulty": "medium", "image_id": null, "image_file": null, "source_facts": ["Try to find the owner if your vehicle hits or rolls into a parked car or other property.", "If you cannot find the owner after hitting a parked car or other property, leave a note with your name, phone number, and address.", "Securely attach the note to the vehicle or property if you cannot find the owner.", "Report the collision to law enforcement if you cannot find the owner after hitting a parked car or other property."], "validation_status": "pass", "validation_notes": null, "ranking": {"frequency": 9, "quality": 9, "importance": 8, "uniqueness": 7, "composite": 8.3, "rank": 8}, "_image_data_uri": null}, {"question_id": "q-sec10-insurance-requirements-002", "question_type": "multiple_choice", "question_text": "When must you have proof of financial responsibility (insurance) with you?", "choices": [{"label": "A", "text": "Only when driving on highways"}, {"label": "B", "text": "When you drive and for a drive test"}, {"label": "C", "text": "Only when driving commercially"}, {"label": "D", "text": "Only when driving in another state"}], "correct_answer": "B", "explanation": "You must have your proof of financial responsibility (insurance) when you drive and for a drive test. This requirement applies to all driving, not just specific situations.", "section_id": "section-10", "topic": "Insurance Requirements", "subtopic": "Proof of Financial Responsibility (Insurance)", "difficulty": "easy", "image_id": null, "image_file": null, "source_facts": ["You must have your proof of financial responsibility (insurance) when you drive.", "You must have your proof of financial responsibility (insurance) for a drive test."], "validation_status": "pass", "validation_notes": null, "ranking": {"frequency": 9, "quality": 8, "importance": 8, "uniqueness": 8, "composite": 8.3, "rank": 9}, "_image_data_uri": null}, {"question_id": "q-sec10-collisions-032", "question_type": "scenario", "question_text": "You are involved in a collision where the other driver suffers a minor wrist sprain. The property damage is estimated at $500. Must you report this collision to the DMV?", "choices": [{"label": "A", "text": "No, because the property damage is less than $1,000"}, {"label": "B", "text": "No, because the injury is minor"}, {"label": "C", "text": "Yes, because someone was injured, even though the injury was minor"}, {"label": "D", "text": "Yes, but only if the other driver requests it"}], "correct_answer": "C", "explanation": "You must report a collision to DMV within 10 days if anyone was injured or killed. This requirement applies even if the injuries were minor. The $1,000 property damage threshold is a separate trigger -- any injury at all requires a DMV report regardless of damage amount.", "section_id": "section-10", "topic": "Collisions", "subtopic": "Reporting a Collision", "difficulty": "hard", "image_id": null, "image_file": null, "source_facts": ["If you are in a collision, you must report it to DMV within 10 days if anyone was injured or killed.", "The requirement to report a collision to DMV applies even if the injuries were minor."], "validation_status": "pass", "validation_notes": null, "ranking": {"frequency": 8, "quality": 9, "importance": 8, "uniqueness": 7, "composite": 8.1, "rank": 10}, "_image_data_uri": null}, {"question_id": "q-sec10-insurance-requirements-008", "question_type": "multiple_choice", "question_text": "Who takes on financial responsibility for a driver younger than 18 years old?", "choices": [{"label": "A", "text": "The driver themselves"}, {"label": "B", "text": "The DMV"}, {"label": "C", "text": "Parents or guardians"}, {"label": "D", "text": "The driving instructor"}], "correct_answer": "C", "explanation": "Parents or guardians take on financial responsibility for drivers younger than 18 years old and pay for damages if the driver is involved in a collision.", "section_id": "section-10", "topic": "Insurance Requirements", "subtopic": "Financial Responsibility by Age", "difficulty": "easy", "image_id": null, "image_file": null, "source_facts": ["Parents or guardians take on financial responsibility for drivers younger than 18 years old."], "validation_status": "pass", "validation_notes": null, "ranking": {"frequency": 8, "quality": 8, "importance": 7, "uniqueness": 9, "composite": 8.0, "rank": 11}, "_image_data_uri": null}, {"question_id": "q-sec10-collisions-031", "question_type": "scenario", "question_text": "You are driving through a parking lot and your vehicle rolls into a parked car, denting the bumper. No one is around and the damage appears to be about $800. What should you do?", "choices": [{"label": "A", "text": "Leave a note with your name, phone number, and address on the parked car and report the collision to law enforcement"}, {"label": "B", "text": "Drive away because the damage is less than $1,000"}, {"label": "C", "text": "Call 911 immediately"}, {"label": "D", "text": "Wait at the scene for exactly one hour for the owner to return"}], "correct_answer": "A", "explanation": "If your vehicle hits or rolls into a parked car and you cannot find the owner, you must leave a note with your name, phone number, and address securely attached to the vehicle. You must also report the collision to law enforcement. Driving away would constitute a hit-and-run.", "section_id": "section-10", "topic": "Collisions", "subtopic": "What to Do if You Are in a Collision", "difficulty": "medium", "image_id": null, "image_file": null, "source_facts": ["Try to find the owner if your vehicle hits or rolls into a parked car or other property.", "If you cannot find the owner after hitting a parked car or other property, leave a note with your name, phone number, and address.", "Securely attach the note to the vehicle or property if you cannot find the owner.", "Report the collision to law enforcement if you cannot find the owner after hitting a parked car or other property."], "validation_status": "pass", "validation_notes": null, "ranking": {"frequency": 8, "quality": 9, "importance": 8, "uniqueness": 6, "composite": 7.9, "rank": 12}, "_image_data_uri": null}, {"question_id": "q-sec10-collisions-010", "question_type": "multiple_choice", "question_text": "What is it called when a driver fails to stop at or leaves the scene of a collision?", "choices": [{"label": "A", "text": "Hit-and-run"}, {"label": "B", "text": "Reckless driving"}, {"label": "C", "text": "Vehicular negligence"}, {"label": "D", "text": "Traffic evasion"}], "correct_answer": "A", "explanation": "Failing to stop or leaving the scene of an accident is called a hit-and-run. The punishment is severe if you are convicted of a hit-and-run.", "section_id": "section-10", "topic": "Collisions", "subtopic": "What to Do if You Are in a Collision", "difficulty": "easy", "image_id": null, "image_file": null, "source_facts": ["Failing to stop or leaving the scene of an accident is called a hit-and-run.", "The punishment is severe if you are convicted of a hit-and-run."], "validation_status": "pass", "validation_notes": null, "ranking": {"frequency": 8, "quality": 7, "importance": 9, "uniqueness": 7, "composite": 7.8, "rank": 13}, "_image_data_uri": null}, {"question_id": "q-sec10-collisions-014", "question_type": "multiple_choice", "question_text": "Within how many hours must you report a collision to law enforcement if anyone is injured or killed?", "choices": [{"label": "A", "text": "12 hours"}, {"label": "B", "text": "24 hours"}, {"label": "C", "text": "48 hours"}, {"label": "D", "text": "72 hours"}], "correct_answer": "B", "explanation": "You must make a report to law enforcement within 24 hours of the collision if anyone is injured or killed. Your insurance agent, broker, or legal representative can also file the report.", "section_id": "section-10", "topic": "Collisions", "subtopic": "What to Do if You Are in a Collision", "difficulty": "medium", "image_id": null, "image_file": null, "source_facts": ["You must make a report to law enforcement within 24 hours of the collision if anyone is injured or killed."], "validation_status": "pass", "validation_notes": null, "ranking": {"frequency": 8, "quality": 8, "importance": 8, "uniqueness": 7, "composite": 7.8, "rank": 14}, "_image_data_uri": null}, {"question_id": "q-sec10-collisions-033", "question_type": "scenario", "question_text": "You are a 17-year-old driver involved in a collision that causes $2,000 in property damage. No one is injured. Who is financially responsible, and what must you do regarding DMV reporting?", "choices": [{"label": "A", "text": "Your parents or guardians are financially responsible, and you must report to DMV within 10 days"}, {"label": "B", "text": "You are financially responsible and must report to DMV within 30 days"}, {"label": "C", "text": "Your driving instructor is financially responsible, and the police will report to DMV for you"}, {"label": "D", "text": "No one is financially responsible since you are a minor, and no DMV report is needed since no one was injured"}], "correct_answer": "A", "explanation": "Parents or guardians take on financial responsibility for drivers younger than 18 years old. Since the property damage exceeds $1,000, you must report the collision to DMV within 10 days by filing a Report of Traffic Accident Occurring in California (SR 1).", "section_id": "section-10", "topic": "Collisions", "subtopic": "Reporting a Collision", "difficulty": "hard", "image_id": null, "image_file": null, "source_facts": ["Parents or guardians take on financial responsibility for drivers younger than 18 years old.", "Parents or guardians pay for damages if a driver younger than 18 years old is involved in a collision.", "If you are in a collision, you must report it to DMV within 10 days if the collision caused more than $1,000 in damage to property."], "validation_status": "pass", "validation_notes": null, "ranking": {"frequency": 7, "quality": 9, "importance": 7, "uniqueness": 8, "composite": 7.7, "rank": 15}, "_image_data_uri": null}, {"question_id": "q-sec10-collisions-034", "question_type": "scenario", "question_text": "You are in a collision on a friend\'s private driveway. The other vehicle sustains $1,500 in damage but no one is hurt. Do you need to file a report with the DMV?", "choices": [{"label": "A", "text": "No, because the collision happened on private property"}, {"label": "B", "text": "No, because no one was injured"}, {"label": "C", "text": "Yes, but only if your friend requests it"}, {"label": "D", "text": "Yes, because the property damage exceeds $1,000, and the reporting requirement applies even on private property"}], "correct_answer": "D", "explanation": "You must report the collision to DMV within 10 days because the property damage exceeds $1,000. The requirement to file a DMV collision report applies even if the collision happened on private property.", "section_id": "section-10", "topic": "Collisions", "subtopic": "Reporting a Collision", "difficulty": "hard", "image_id": null, "image_file": null, "source_facts": ["If you are in a collision, you must report it to DMV within 10 days if the collision caused more than $1,000 in damage to property.", "You must file the DMV collision report even if the collision happened on private property."], "validation_status": "pass", "validation_notes": null, "ranking": {"frequency": 7, "quality": 9, "importance": 7, "uniqueness": 8, "composite": 7.7, "rank": 16}, "_image_data_uri": null}, {"question_id": "q-sec10-collisions-035", "question_type": "scenario", "question_text": "You are involved in a collision without insurance. The other driver was at fault. Can your driving privilege be suspended?", "choices": [{"label": "A", "text": "No, because the other driver was at fault"}, {"label": "B", "text": "No, because only the at-fault driver faces consequences"}, {"label": "C", "text": "Yes, your driving privilege can be suspended for up to four years regardless of who was at fault"}, {"label": "D", "text": "Yes, but only for up to one year since you were not at fault"}], "correct_answer": "C", "explanation": "Your driving privilege will be suspended for up to four years if you are in a collision and do not have proper insurance coverage. It does not matter who was at fault -- the suspension applies regardless.", "section_id": "section-10", "topic": "Driving Without Insurance", "subtopic": "Suspension and California Insurance Proof Certificate", "difficulty": "hard", "image_id": null, "image_file": null, "source_facts": ["Your driving privilege will be suspended for up to four years if you are in a collision and do not have proper insurance coverage.", "For the suspension due to being in a collision without proper insurance coverage, it does not matter who was at fault."], "validation_status": "pass", "validation_notes": null, "ranking": {"frequency": 8, "quality": 9, "importance": 8, "uniqueness": 5, "composite": 7.7, "rank": 17}, "_image_data_uri": null}, {"question_id": "q-sec10-collisions-028", "question_type": "true_false", "question_text": "DMV will add a collision to your driver\'s record regardless of who caused the collision.", "choices": [{"label": "True", "text": "True"}, {"label": "False", "text": "False"}], "correct_answer": "True", "explanation": "DMV will add the collision to your driver\'s record. It does not matter who caused the collision -- the collision appears on the records of all involved drivers.", "section_id": "section-10", "topic": "Collisions", "subtopic": "Collisions on Your Driver\'s Record", "difficulty": "medium", "image_id": null, "image_file": null, "source_facts": ["DMV will add the collision to your driver\'s record.", "It does not matter who caused the collision."], "validation_status": "pass", "validation_notes": null, "ranking": {"frequency": 7, "quality": 8, "importance": 7, "uniqueness": 9, "composite": 7.6, "rank": 18}, "_image_data_uri": null}, {"question_id": "q-sec10-insurance-requirements-011", "question_type": "multiple_choice", "question_text": "Before you buy insurance, what should you verify about the insurance provider?", "choices": [{"label": "A", "text": "That they have at least 10 years of experience"}, {"label": "B", "text": "That they offer the lowest rates in California"}, {"label": "C", "text": "That they are recommended by the DMV"}, {"label": "D", "text": "That they are licensed by the California Department of Insurance"}], "correct_answer": "D", "explanation": "Before you buy insurance, make sure that the agent, broker, or insurance provider is licensed by the California Department of Insurance. You can check license status at insurance.ca.gov/license-status/.", "section_id": "section-10", "topic": "Insurance Requirements", "subtopic": "Verifying Insurance Providers", "difficulty": "medium", "image_id": null, "image_file": null, "source_facts": ["Before you buy insurance, make sure that the agent, broker, or insurance provider is licensed by the California Department of Insurance."], "validation_status": "pass", "validation_notes": null, "ranking": {"frequency": 6, "quality": 8, "importance": 7, "uniqueness": 9, "composite": 7.3, "rank": 24}, "_image_data_uri": null}, {"question_id": "q-sec10-low-cost-insurance-001", "question_type": "multiple_choice", "question_text": "If you cannot afford liability insurance, what program may you be eligible for?", "choices": [{"label": "A", "text": "California Free Auto Insurance Program"}, {"label": "B", "text": "California Low Cost Automobile Insurance Program"}, {"label": "C", "text": "California State Insurance Fund"}, {"label": "D", "text": "California Insurance Assistance Program"}], "correct_answer": "B", "explanation": "If you cannot afford liability insurance, you may be eligible for the California Low Cost Automobile Insurance Program. You can visit mylowcostauto.com or call 1-866-602-8861 for more information.", "section_id": "section-10", "topic": "Low-cost Insurance", "subtopic": "California Low Cost Automobile Insurance Program", "difficulty": "medium", "image_id": null, "image_file": null, "source_facts": ["If you cannot afford liability insurance, you may be eligible for the California Low Cost Automobile Insurance Program."], "validation_status": "pass", "validation_notes": null, "ranking": {"frequency": 6, "quality": 8, "importance": 6, "uniqueness": 9, "composite": 7.1, "rank": 28}, "_image_data_uri": null}]');
+
+/* ---- State ---- */
+var filtered = [];       // Current filtered/shuffled question list (indices into ALL_QUESTIONS)
+var currentIdx = 0;      // Index into filtered[]
+var answers = {};        // questionIndex -> selected choice index
+var revealed = {};       // questionIndex -> true if answer was revealed
+
+/* ---- DOM refs ---- */
+var $counter = document.getElementById('q-counter');
+var $sectionLabel = document.getElementById('q-section-label');
+var $topicLabel = document.getElementById('q-topic-label');
+var $difficultyLabel = document.getElementById('q-difficulty-label');
+var $imageWrapper = document.getElementById('q-image-wrapper');
+var $image = document.getElementById('q-image');
+var $text = document.getElementById('q-text');
+var $choices = document.getElementById('choices-container');
+var $feedback = document.getElementById('feedback');
+var $feedbackText = document.getElementById('feedback-text');
+var $explanation = document.getElementById('explanation');
+var $btnShow = document.getElementById('btn-show-answer');
+var $btnPrev = document.getElementById('btn-prev');
+var $btnNext = document.getElementById('btn-next');
+var $progressBar = document.getElementById('progress-bar');
+var $scoreCorrect = document.getElementById('score-correct');
+var $scoreIncorrect = document.getElementById('score-incorrect');
+var $scoreUnanswered = document.getElementById('score-unanswered');
+var $questionContainer = document.getElementById('question-container');
+var $summaryContainer = document.getElementById('summary-container');
+var $emptyState = document.getElementById('empty-state');
+var $filterSection = document.getElementById('filter-section');
+var $filterTopic = document.getElementById('filter-topic');
+var $filterDifficulty = document.getElementById('filter-difficulty');
+var $filterType = document.getElementById('filter-type');
+var $btnShuffle = document.getElementById('btn-shuffle');
+var $btnReset = document.getElementById('btn-reset');
+
+/* ---- Helpers ---- */
+function escapeHtml(str) {
+  var div = document.createElement('div');
+  div.appendChild(document.createTextNode(str || ''));
+  return div.innerHTML;
+}
+
+function getField(q, names, fallback) {
+  for (var i = 0; i < names.length; i++) {
+    if (q[names[i]] !== undefined && q[names[i]] !== null && q[names[i]] !== '') return q[names[i]];
+  }
+  return fallback || '';
+}
+
+function getSection(q) { return getField(q, ['section', 'section_id', 'section_title'], 'Unknown'); }
+function getTopic(q) { return getField(q, ['topic', 'topic_title', 'topic_id'], ''); }
+function getDifficulty(q) { return getField(q, ['difficulty', 'difficulty_level'], ''); }
+function getType(q) { return getField(q, ['question_type', 'type'], 'multiple_choice'); }
+function getQuestionText(q) { return getField(q, ['question_text', 'question', 'text'], ''); }
+function getExplanation(q) { return getField(q, ['explanation', 'rationale', 'answer_explanation'], ''); }
+
+function getChoices(q) {
+  // Choices may be an array of strings or an array of objects with label/text keys.
+  var raw = q.choices || q.options || q.answers || [];
+  var result = [];
+  for (var i = 0; i < raw.length; i++) {
+    var c = raw[i];
+    if (typeof c === 'string') {
+      result.push(c);
+    } else if (c && typeof c === 'object') {
+      result.push(c.text || c.label || c.value || c.choice || JSON.stringify(c));
+    } else {
+      result.push(String(c));
+    }
+  }
+  // For true_false questions with no explicit choices, supply them.
+  if (result.length === 0 && getType(q) === 'true_false') {
+    result = ['True', 'False'];
+  }
+  return result;
+}
+
+function getCorrectIndex(q) {
+  // correct_answer may be an index (int), a letter (A/B/C/D), or the answer text.
+  var ca = q.correct_answer !== undefined ? q.correct_answer : (q.answer !== undefined ? q.answer : null);
+  if (ca === null || ca === undefined) return -1;
+  var choices = getChoices(q);
+  // Integer index
+  if (typeof ca === 'number') return ca;
+  var s = String(ca).trim();
+  // Single letter A-Z
+  if (/^[A-Za-z]$/.test(s)) {
+    var idx = s.toUpperCase().charCodeAt(0) - 65;
+    if (idx >= 0 && idx < choices.length) return idx;
+  }
+  // Letter with parentheses or period: "A)" or "A."
+  var letterMatch = s.match(/^([A-Za-z])[\).:\s]/);
+  if (letterMatch) {
+    var li = letterMatch[1].toUpperCase().charCodeAt(0) - 65;
+    if (li >= 0 && li < choices.length) return li;
+  }
+  // Exact text match
+  for (var i = 0; i < choices.length; i++) {
+    if (choices[i].trim() === s) return i;
+  }
+  // Substring match (correct_answer text contained in a choice)
+  for (var j = 0; j < choices.length; j++) {
+    if (choices[j].toLowerCase().indexOf(s.toLowerCase()) !== -1) return j;
+    if (s.toLowerCase().indexOf(choices[j].toLowerCase()) !== -1) return j;
+  }
+  // Numeric string
+  var num = parseInt(s, 10);
+  if (!isNaN(num) && num >= 0 && num < choices.length) return num;
+  return -1;
+}
+
+/* ---- Filter population ---- */
+function populateFilters() {
+  var sections = {}, topics = {}, difficulties = {}, types = {};
+  for (var i = 0; i < ALL_QUESTIONS.length; i++) {
+    var q = ALL_QUESTIONS[i];
+    var s = getSection(q); if (s) sections[s] = true;
+    var t = getTopic(q); if (t) topics[t] = true;
+    var d = getDifficulty(q); if (d) difficulties[d] = true;
+    var tp = getType(q); if (tp) types[tp] = true;
+  }
+  fillSelect($filterSection, sections);
+  fillSelect($filterTopic, topics);
+  fillSelect($filterDifficulty, difficulties);
+  fillSelect($filterType, types);
+}
+
+function fillSelect(el, map) {
+  var keys = Object.keys(map).sort();
+  for (var i = 0; i < keys.length; i++) {
+    var opt = document.createElement('option');
+    opt.value = keys[i];
+    opt.textContent = keys[i];
+    el.appendChild(opt);
+  }
+}
+
+/* ---- Filtering ---- */
+function applyFilters() {
+  var sv = $filterSection.value;
+  var tv = $filterTopic.value;
+  var dv = $filterDifficulty.value;
+  var tpv = $filterType.value;
+  filtered = [];
+  for (var i = 0; i < ALL_QUESTIONS.length; i++) {
+    var q = ALL_QUESTIONS[i];
+    if (sv !== 'all' && getSection(q) !== sv) continue;
+    if (tv !== 'all' && getTopic(q) !== tv) continue;
+    if (dv !== 'all' && getDifficulty(q) !== dv) continue;
+    if (tpv !== 'all' && getType(q) !== tpv) continue;
+    filtered.push(i);
+  }
+  currentIdx = 0;
+  updateView();
+}
+
+/* ---- Shuffle ---- */
+function shuffleArray(arr) {
+  for (var i = arr.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+  }
+}
+
+/* ---- Score calculation ---- */
+function calcScores() {
+  var correct = 0, incorrect = 0, unanswered = 0;
+  for (var i = 0; i < filtered.length; i++) {
+    var qi = filtered[i];
+    if (revealed[qi] && answers[qi] !== undefined) {
+      var q = ALL_QUESTIONS[qi];
+      if (answers[qi] === getCorrectIndex(q)) correct++;
+      else incorrect++;
+    } else {
+      unanswered++;
+    }
+  }
+  return { correct: correct, incorrect: incorrect, unanswered: unanswered, total: filtered.length };
+}
+
+function updateScoreDisplay() {
+  var s = calcScores();
+  $scoreCorrect.textContent = 'Correct: ' + s.correct;
+  $scoreIncorrect.textContent = 'Incorrect: ' + s.incorrect;
+  $scoreUnanswered.textContent = 'Remaining: ' + s.unanswered;
+  // Progress bar: answered / total
+  var pct = s.total > 0 ? ((s.correct + s.incorrect) / s.total * 100) : 0;
+  $progressBar.style.width = pct + '%';
+}
+
+/* ---- Rendering ---- */
+function renderQuestion() {
+  if (filtered.length === 0) {
+    $questionContainer.style.display = 'none';
+    $summaryContainer.style.display = 'none';
+    $emptyState.style.display = 'block';
+    updateScoreDisplay();
+    return;
+  }
+  $emptyState.style.display = 'none';
+  $summaryContainer.style.display = 'none';
+  $questionContainer.style.display = 'block';
+
+  var qi = filtered[currentIdx];
+  var q = ALL_QUESTIONS[qi];
+
+  // Counter
+  $counter.textContent = 'Question ' + (currentIdx + 1) + ' of ' + filtered.length;
+
+  // Meta tags
+  $sectionLabel.textContent = getSection(q);
+  var topic = getTopic(q);
+  $topicLabel.textContent = topic;
+  $topicLabel.style.display = topic ? '' : 'none';
+  var diff = getDifficulty(q);
+  $difficultyLabel.textContent = diff;
+  $difficultyLabel.style.display = diff ? '' : 'none';
+
+  // Image
+  var imgUri = q._image_data_uri;
+  if (imgUri) {
+    $image.src = imgUri;
+    $imageWrapper.style.display = 'block';
+  } else {
+    $imageWrapper.style.display = 'none';
+    $image.src = '';
+  }
+
+  // Question text
+  $text.innerHTML = escapeHtml(getQuestionText(q));
+
+  // Choices
+  var choices = getChoices(q);
+  $choices.innerHTML = '';
+  var isRevealed = !!revealed[qi];
+  var selectedIdx = answers[qi];
+  var correctIdx = getCorrectIndex(q);
+  var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+  for (var i = 0; i < choices.length; i++) {
+    var btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.setAttribute('data-idx', i);
+
+    var letterSpan = document.createElement('span');
+    letterSpan.className = 'choice-letter';
+    letterSpan.textContent = (i < letters.length ? letters[i] : (i + 1)) + '.';
+
+    var textSpan = document.createElement('span');
+    textSpan.className = 'choice-text';
+    textSpan.textContent = choices[i];
+
+    btn.appendChild(letterSpan);
+    btn.appendChild(textSpan);
+
+    // Styling based on state
+    if (isRevealed) {
+      if (i === correctIdx) {
+        btn.classList.add('choice-correct');
+      }
+      if (selectedIdx !== undefined && i === selectedIdx && i !== correctIdx) {
+        btn.classList.add('choice-incorrect');
+      }
+      btn.disabled = true;
+    } else if (selectedIdx !== undefined && i === selectedIdx) {
+      btn.classList.add('choice-selected');
+    }
+
+    btn.addEventListener('click', (function(idx) {
+      return function() { selectChoice(idx); };
+    })(i));
+
+    $choices.appendChild(btn);
+  }
+
+  // Feedback
+  if (isRevealed) {
+    $feedback.style.display = 'block';
+    if (selectedIdx === correctIdx) {
+      $feedbackText.textContent = 'Correct!';
+      $feedbackText.className = 'feedback-correct';
+    } else if (selectedIdx !== undefined && selectedIdx >= 0) {
+      $feedbackText.textContent = 'Incorrect. The correct answer is ' + (correctIdx < letters.length ? letters[correctIdx] : (correctIdx + 1)) + '.';
+      $feedbackText.className = 'feedback-incorrect';
+    } else {
+      $feedbackText.textContent = 'No answer selected. The correct answer is ' + (correctIdx < letters.length ? letters[correctIdx] : (correctIdx + 1)) + '.';
+      $feedbackText.className = 'feedback-incorrect';
+    }
+    var expl = getExplanation(q);
+    if (expl) {
+      $explanation.style.display = 'block';
+      $explanation.innerHTML = '<strong>Explanation:</strong> ' + escapeHtml(expl);
+    } else {
+      $explanation.style.display = 'none';
+    }
+    $btnShow.style.display = 'none';
+  } else {
+    $feedback.style.display = 'none';
+    $explanation.style.display = 'none';
+    $btnShow.style.display = '';
+  }
+
+  // Nav buttons
+  $btnPrev.disabled = (currentIdx === 0);
+  $btnNext.textContent = (currentIdx === filtered.length - 1) ? 'Finish' : 'Next \u2192';
+
+  updateScoreDisplay();
+}
+
+function selectChoice(idx) {
+  var qi = filtered[currentIdx];
+  if (revealed[qi]) return;
+  answers[qi] = idx;
+  renderQuestion();
+}
+
+function revealAnswer() {
+  var qi = filtered[currentIdx];
+  revealed[qi] = true;
+  if (answers[qi] === undefined) {
+    answers[qi] = -1;
+  }
+  renderQuestion();
+}
+
+function goNext() {
+  if (currentIdx < filtered.length - 1) {
+    currentIdx++;
+    renderQuestion();
+    window.scrollTo(0, 0);
+  } else {
+    showSummary();
+  }
+}
+
+function goPrev() {
+  if (currentIdx > 0) {
+    currentIdx--;
+    renderQuestion();
+    window.scrollTo(0, 0);
+  }
+}
+
+/* ---- Summary ---- */
+function showSummary() {
+  $questionContainer.style.display = 'none';
+  $emptyState.style.display = 'none';
+  $summaryContainer.style.display = 'block';
+
+  var s = calcScores();
+  var pct = s.total > 0 ? Math.round(s.correct / s.total * 100) : 0;
+  var passed = pct >= 83;  // CA DMV passing score
+
+  document.getElementById('summary-score').innerHTML =
+    '<div class="summary-big-score">' + s.correct + ' / ' + s.total + '</div>' +
+    '<div class="summary-pct ' + (passed ? 'summary-pass' : 'summary-fail') + '">' + pct + '%' +
+    (passed ? ' -- PASS' : ' -- NEEDS PRACTICE') + '</div>' +
+    '<div class="summary-detail">' +
+    '<span class="score-chip correct-chip">Correct: ' + s.correct + '</span> ' +
+    '<span class="score-chip incorrect-chip">Incorrect: ' + s.incorrect + '</span> ' +
+    '<span class="score-chip unanswered-chip">Unanswered: ' + s.unanswered + '</span>' +
+    '</div>';
+
+  // Breakdown by section
+  var sectionStats = {};
+  for (var i = 0; i < filtered.length; i++) {
+    var qi = filtered[i];
+    var q = ALL_QUESTIONS[qi];
+    var sec = getSection(q);
+    if (!sectionStats[sec]) sectionStats[sec] = { correct: 0, incorrect: 0, unanswered: 0, total: 0 };
+    sectionStats[sec].total++;
+    if (revealed[qi] && answers[qi] !== undefined) {
+      if (answers[qi] === getCorrectIndex(q)) sectionStats[sec].correct++;
+      else sectionStats[sec].incorrect++;
+    } else {
+      sectionStats[sec].unanswered++;
+    }
+  }
+  var bhtml = '<h3>Breakdown by Section</h3><table class="breakdown-table"><thead><tr><th>Section</th><th>Correct</th><th>Incorrect</th><th>Unanswered</th><th>Score</th></tr></thead><tbody>';
+  var skeys = Object.keys(sectionStats).sort();
+  for (var j = 0; j < skeys.length; j++) {
+    var st = sectionStats[skeys[j]];
+    var sp = st.total > 0 ? Math.round(st.correct / st.total * 100) : 0;
+    bhtml += '<tr><td>' + escapeHtml(skeys[j]) + '</td><td>' + st.correct + '</td><td>' + st.incorrect + '</td><td>' + st.unanswered + '</td><td>' + sp + '%</td></tr>';
+  }
+  bhtml += '</tbody></table>';
+  document.getElementById('summary-breakdown').innerHTML = bhtml;
+
+  updateScoreDisplay();
+}
+
+/* ---- Main view toggle ---- */
+function updateView() {
+  renderQuestion();
+}
+
+/* ---- Reset ---- */
+function resetAll() {
+  answers = {};
+  revealed = {};
+  currentIdx = 0;
+  updateView();
+}
+
+/* ---- Event listeners ---- */
+$btnShow.addEventListener('click', revealAnswer);
+$btnNext.addEventListener('click', goNext);
+$btnPrev.addEventListener('click', goPrev);
+$filterSection.addEventListener('change', applyFilters);
+$filterTopic.addEventListener('change', applyFilters);
+$filterDifficulty.addEventListener('change', applyFilters);
+$filterType.addEventListener('change', applyFilters);
+$btnShuffle.addEventListener('click', function() {
+  shuffleArray(filtered);
+  currentIdx = 0;
+  updateView();
+});
+$btnReset.addEventListener('click', resetAll);
+document.getElementById('btn-review').addEventListener('click', function() {
+  currentIdx = 0;
+  $summaryContainer.style.display = 'none';
+  $questionContainer.style.display = 'block';
+  renderQuestion();
+});
+document.getElementById('btn-restart').addEventListener('click', function() {
+  resetAll();
+  $summaryContainer.style.display = 'none';
+});
+
+// Keyboard navigation
+document.addEventListener('keydown', function(e) {
+  if ($summaryContainer.style.display !== 'none') return;
+  if ($questionContainer.style.display === 'none') return;
+  if (e.key === 'ArrowRight' || e.key === 'n') goNext();
+  else if (e.key === 'ArrowLeft' || e.key === 'p') goPrev();
+  else if (e.key === 'Enter' || e.key === ' ') {
+    var qi = filtered[currentIdx];
+    if (!revealed[qi]) { e.preventDefault(); revealAnswer(); }
+  }
+  else if (e.key >= '1' && e.key <= '9') {
+    var ci = parseInt(e.key, 10) - 1;
+    var qi2 = filtered[currentIdx];
+    if (!revealed[qi2] && ci < getChoices(ALL_QUESTIONS[qi2]).length) selectChoice(ci);
+  }
+  else if (e.key >= 'a' && e.key <= 'z' && e.key.length === 1) {
+    var ci2 = e.key.charCodeAt(0) - 97;
+    var qi3 = filtered[currentIdx];
+    if (!revealed[qi3] && ci2 < getChoices(ALL_QUESTIONS[qi3]).length) selectChoice(ci2);
+  }
+});
+
+/* ---- Init ---- */
+populateFilters();
+applyFilters();
+
+})();
+</script>
+</body>
+</html>

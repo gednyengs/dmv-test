@@ -218,6 +218,13 @@ header h1 {
 
 .choice-btn:disabled {
   cursor: default;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.choice-btn:disabled.choice-correct,
+.choice-btn:disabled.choice-incorrect {
+  opacity: 1;
 }
 
 .choice-letter {
@@ -511,7 +518,7 @@ header h1 {
     </div>
 
     <div id="action-buttons">
-      <button id="btn-show-answer" class="btn-primary">Show Answer</button>
+      <button id="btn-show-answer" class="btn-primary">Check Answer</button>
     </div>
 
     <div id="nav-buttons">
@@ -714,7 +721,7 @@ function calcScores() {
   var correct = 0, incorrect = 0, unanswered = 0;
   for (var i = 0; i < filtered.length; i++) {
     var qi = filtered[i];
-    if (answers[qi] !== undefined) {
+    if (revealed[qi] && answers[qi] !== undefined) {
       var q = ALL_QUESTIONS[qi];
       if (answers[qi] === getCorrectIndex(q)) correct++;
       else incorrect++;
@@ -826,12 +833,12 @@ function renderQuestion() {
     if (selectedIdx === correctIdx) {
       $feedbackText.textContent = 'Correct!';
       $feedbackText.className = 'feedback-correct';
-    } else if (selectedIdx !== undefined) {
+    } else if (selectedIdx !== undefined && selectedIdx >= 0) {
       $feedbackText.textContent = 'Incorrect. The correct answer is ' + (correctIdx < letters.length ? letters[correctIdx] : (correctIdx + 1)) + '.';
       $feedbackText.className = 'feedback-incorrect';
     } else {
-      $feedbackText.textContent = 'The correct answer is ' + (correctIdx < letters.length ? letters[correctIdx] : (correctIdx + 1)) + '.';
-      $feedbackText.className = 'feedback-neutral';
+      $feedbackText.textContent = 'No answer selected. The correct answer is ' + (correctIdx < letters.length ? letters[correctIdx] : (correctIdx + 1)) + '.';
+      $feedbackText.className = 'feedback-incorrect';
     }
     var expl = getExplanation(q);
     if (expl) {
@@ -864,6 +871,9 @@ function selectChoice(idx) {
 function revealAnswer() {
   var qi = filtered[currentIdx];
   revealed[qi] = true;
+  if (answers[qi] === undefined) {
+    answers[qi] = -1;
+  }
   renderQuestion();
 }
 
@@ -913,7 +923,7 @@ function showSummary() {
     var sec = getSection(q);
     if (!sectionStats[sec]) sectionStats[sec] = { correct: 0, incorrect: 0, unanswered: 0, total: 0 };
     sectionStats[sec].total++;
-    if (answers[qi] !== undefined) {
+    if (revealed[qi] && answers[qi] !== undefined) {
       if (answers[qi] === getCorrectIndex(q)) sectionStats[sec].correct++;
       else sectionStats[sec].incorrect++;
     } else {
