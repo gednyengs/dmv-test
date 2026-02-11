@@ -1,145 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>California DMV Practice Test</title>
-  <style>
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>California DMV Practice Test</title>
+<style>
+*, *::before, *::after {
+  box-sizing: border-box;
+}
 
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      background: #f5f7fa;
-      color: #1a1a2e;
-      line-height: 1.6;
-    }
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: #f5f7fa;
+  color: #1a1a2e;
+  line-height: 1.6;
+}
 
-    #app {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 24px 16px;
-    }
+#app {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
 
-    header {
-      text-align: center;
-      margin-bottom: 32px;
-    }
+header {
+  text-align: center;
+  margin-bottom: 32px;
+}
 
-    header h1 {
-      font-size: 1.8rem;
-      margin: 0 0 8px 0;
-      color: #003366;
-    }
+header h1 {
+  font-size: 1.8rem;
+  margin: 0 0 8px 0;
+  color: #003366;
+}
 
-    .subtitle {
-      font-size: 1.05rem;
-      color: #555;
-      margin: 0;
-    }
+.subtitle {
+  font-size: 1.05rem;
+  color: #555;
+  margin: 0;
+}
 
-    .section-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 16px;
-      margin-bottom: 32px;
-    }
+.section-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
 
-    .section-card {
-      display: flex;
-      flex-direction: column;
-      padding: 20px;
-      background: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-      text-decoration: none;
-      color: inherit;
-      transition: box-shadow 0.2s, transform 0.15s;
-    }
+.section-card {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow 0.2s, transform 0.15s;
+}
 
-    .section-card:hover {
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
-      transform: translateY(-2px);
-    }
+.section-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.14);
+  transform: translateY(-2px);
+}
 
-    .card-section-num {
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: #1976d2;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 4px;
-    }
+.card-section-num {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #1976d2;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
 
-    .card-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #1a1a2e;
-      margin-bottom: 8px;
-      flex: 1;
-    }
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin-bottom: 8px;
+  flex: 1;
+}
 
-    .card-count {
-      font-size: 0.85rem;
-      color: #777;
-      margin-bottom: 8px;
-    }
+.card-count {
+  font-size: 0.85rem;
+  color: #777;
+  margin-bottom: 8px;
+}
 
-    .card-action {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: #1976d2;
-    }
+.card-action {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1976d2;
+}
 
-    footer {
-      text-align: center;
-      color: #777;
-      font-size: 0.9rem;
-      padding: 16px 0;
-    }
+footer {
+  text-align: center;
+  color: #777;
+  font-size: 0.9rem;
+  padding: 16px 0;
+}
 
-    @media (max-width: 600px) {
-      #app {
-        padding: 12px 8px;
-      }
+@media (max-width: 600px) {
+  #app { padding: 12px 8px; }
+  header h1 { font-size: 1.4rem; }
+  .section-grid { grid-template-columns: 1fr; }
+}
 
-      header h1 {
-        font-size: 1.4rem;
-      }
-
-      .section-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+</style>
 </head>
-
 <body>
-  <div id="app">
-    <header>
-      <h1>California DMV Practice Test for Rasha Smiles</h1>
-      <p class="subtitle">Hello Rasha, please select a section to begin practicing.</p>
-    </header>
-    <div class="section-grid">
+<div id="app">
+  <header>
+    <h1>California DMV Practice Test</h1>
+    <p class="subtitle">Select a section to begin practicing.</p>
+  </header>
+  <div class="section-grid">
 
-      <a href="section-05.html" class="section-card">
-        <div class="card-section-num">Section 05</div>
-        <div class="card-title">An Introduction to Driving</div>
-        <span class="card-count">59 questions</span>
-        <span class="card-action">Start Practice &rarr;</span>
-      </a>
+    <a href="section-05.html" class="section-card">
+      <div class="card-section-num">Section 05</div>
+      <div class="card-title">An Introduction to Driving</div>
+      <span class="card-count">59 questions</span>
+      <span class="card-action">Start Practice &rarr;</span>
+    </a>
 
-    </div>
-    <footer>
-      <p>Each section can be taken independently. Complete all sections for comprehensive DMV test preparation.</p>
-    </footer>
+    <a href="section-06.html" class="section-card">
+      <div class="card-section-num">Section 06</div>
+      <div class="card-title">Navigating the Roads</div>
+      <span class="card-count">100 questions</span>
+      <span class="card-action">Start Practice &rarr;</span>
+    </a>
+
   </div>
+  <footer>
+    <p>Each section can be taken independently. Complete all sections for comprehensive DMV test preparation.</p>
+  </footer>
+</div>
 </body>
-
 </html>
