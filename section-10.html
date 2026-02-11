@@ -557,6 +557,7 @@ var filtered = [];       // Current filtered/shuffled question list (indices int
 var currentIdx = 0;      // Index into filtered[]
 var answers = {};        // questionIndex -> selected choice index
 var revealed = {};       // questionIndex -> true if answer was revealed
+var choiceOrder = {};     // questionIndex -> shuffled indices array for choices
 
 /* ---- DOM refs ---- */
 var $counter = document.getElementById('q-counter');
@@ -704,6 +705,7 @@ function applyFilters() {
     if (tpv !== 'all' && getType(q) !== tpv) continue;
     filtered.push(i);
   }
+  shuffleArray(filtered);
   currentIdx = 0;
   updateView();
 }
@@ -713,6 +715,28 @@ function shuffleArray(arr) {
   for (var i = arr.length - 1; i > 0; i--) {
     var j = Math.floor(Math.random() * (i + 1));
     var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+  }
+}
+
+function identityArray(n) {
+  var arr = [];
+  for (var i = 0; i < n; i++) arr.push(i);
+  return arr;
+}
+
+function initChoiceOrders() {
+  choiceOrder = {};
+  for (var i = 0; i < ALL_QUESTIONS.length; i++) {
+    var q = ALL_QUESTIONS[i];
+    var choices = getChoices(q);
+    var type = getType(q);
+    if (type === 'true_false' || choices.length <= 2) {
+      choiceOrder[i] = identityArray(choices.length);
+    } else {
+      var arr = identityArray(choices.length);
+      shuffleArray(arr);
+      choiceOrder[i] = arr;
+    }
   }
 }
 
@@ -785,13 +809,15 @@ function renderQuestion() {
 
   // Choices
   var choices = getChoices(q);
+  var order = choiceOrder[qi] || identityArray(choices.length);
   $choices.innerHTML = '';
   var isRevealed = !!revealed[qi];
   var selectedIdx = answers[qi];
   var correctIdx = getCorrectIndex(q);
   var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-  for (var i = 0; i < choices.length; i++) {
+  for (var i = 0; i < order.length; i++) {
+    var origIdx = order[i];
     var btn = document.createElement('button');
     btn.className = 'choice-btn';
     btn.setAttribute('data-idx', i);
@@ -802,42 +828,43 @@ function renderQuestion() {
 
     var textSpan = document.createElement('span');
     textSpan.className = 'choice-text';
-    textSpan.textContent = choices[i];
+    textSpan.textContent = choices[origIdx];
 
     btn.appendChild(letterSpan);
     btn.appendChild(textSpan);
 
     // Styling based on state
     if (isRevealed) {
-      if (i === correctIdx) {
+      if (origIdx === correctIdx) {
         btn.classList.add('choice-correct');
       }
-      if (selectedIdx !== undefined && i === selectedIdx && i !== correctIdx) {
+      if (selectedIdx !== undefined && origIdx === selectedIdx && origIdx !== correctIdx) {
         btn.classList.add('choice-incorrect');
       }
       btn.disabled = true;
-    } else if (selectedIdx !== undefined && i === selectedIdx) {
+    } else if (selectedIdx !== undefined && origIdx === selectedIdx) {
       btn.classList.add('choice-selected');
     }
 
     btn.addEventListener('click', (function(idx) {
       return function() { selectChoice(idx); };
-    })(i));
+    })(origIdx));
 
     $choices.appendChild(btn);
   }
 
   // Feedback
   if (isRevealed) {
+    var displayCorrectPos = order.indexOf(correctIdx);
     $feedback.style.display = 'block';
     if (selectedIdx === correctIdx) {
       $feedbackText.textContent = 'Correct!';
       $feedbackText.className = 'feedback-correct';
     } else if (selectedIdx !== undefined && selectedIdx >= 0) {
-      $feedbackText.textContent = 'Incorrect. The correct answer is ' + (correctIdx < letters.length ? letters[correctIdx] : (correctIdx + 1)) + '.';
+      $feedbackText.textContent = 'Incorrect. The correct answer is ' + (displayCorrectPos < letters.length ? letters[displayCorrectPos] : (displayCorrectPos + 1)) + '.';
       $feedbackText.className = 'feedback-incorrect';
     } else {
-      $feedbackText.textContent = 'No answer selected. The correct answer is ' + (correctIdx < letters.length ? letters[correctIdx] : (correctIdx + 1)) + '.';
+      $feedbackText.textContent = 'No answer selected. The correct answer is ' + (displayCorrectPos < letters.length ? letters[displayCorrectPos] : (displayCorrectPos + 1)) + '.';
       $feedbackText.className = 'feedback-incorrect';
     }
     var expl = getExplanation(q);
@@ -952,6 +979,8 @@ function updateView() {
 function resetAll() {
   answers = {};
   revealed = {};
+  initChoiceOrders();
+  shuffleArray(filtered);
   currentIdx = 0;
   updateView();
 }
@@ -994,16 +1023,19 @@ document.addEventListener('keydown', function(e) {
   else if (e.key >= '1' && e.key <= '9') {
     var ci = parseInt(e.key, 10) - 1;
     var qi2 = filtered[currentIdx];
-    if (!revealed[qi2] && ci < getChoices(ALL_QUESTIONS[qi2]).length) selectChoice(ci);
+    var order2 = choiceOrder[qi2] || [];
+    if (!revealed[qi2] && ci < order2.length) selectChoice(order2[ci]);
   }
   else if (e.key >= 'a' && e.key <= 'z' && e.key.length === 1) {
     var ci2 = e.key.charCodeAt(0) - 97;
     var qi3 = filtered[currentIdx];
-    if (!revealed[qi3] && ci2 < getChoices(ALL_QUESTIONS[qi3]).length) selectChoice(ci2);
+    var order3 = choiceOrder[qi3] || [];
+    if (!revealed[qi3] && ci2 < order3.length) selectChoice(order3[ci2]);
   }
 });
 
 /* ---- Init ---- */
+initChoiceOrders();
 populateFilters();
 applyFilters();
 
